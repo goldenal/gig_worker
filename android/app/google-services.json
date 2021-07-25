@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "320935100665",
+    "project_id": "gig-worker",
+    "storage_bucket": "gig-worker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:320935100665:android:3684f00dc161c654c4e228",
+        "android_client_info": {
+          "package_name": "com.coldsteamlab.gig_worker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "320935100665-5l9acs4jgha759mne38rll0dp75efnbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDt3bDEi0ptT3gvi9heGcXPCrDSt9t1LJk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "320935100665-5l9acs4jgha759mne38rll0dp75efnbt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

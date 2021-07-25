@@ -1,0 +1,66 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:gig_worker/screens/wrapper.dart';
+import 'package:provider/provider.dart';
+import 'package:gig_worker/models/user.dart';
+import 'package:gig_worker/services/database.dart';
+
+
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  Firebase.initializeApp();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    //tracking and listening to User for changes
+    return MaterialApp(
+        home: fHome(),
+      );
+
+
+  }
+}
+
+class fHome extends StatefulWidget {
+  const fHome({Key? key}) : super(key: key);
+
+  @override
+  _fHomeState createState() => _fHomeState();
+}
+
+class _fHomeState extends State<fHome> {
+  @override
+  Widget build(BuildContext context) {
+    final Future<FirebaseApp> _initialization = Firebase.initializeApp();
+    //Database db = Database();
+   // db.create("adewale job", '900', 'New york', "10am", "5pm");
+      return FutureBuilder(
+        // Initialize FlutterFire:
+        future: _initialization,
+        builder: (context, snapshot) {
+          // Check for errors
+          if (snapshot.hasError) {
+            return Container();
+          }
+
+          // Once complete, show your application
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Wrapper();
+          }
+
+          // Otherwise, show something whilst waiting for initialization to complete
+          return Center(child: CircularProgressIndicator(),);
+        },
+      );
+    }
+  }
+
+
+
+
+
