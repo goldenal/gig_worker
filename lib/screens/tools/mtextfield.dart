@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gig_worker/palette/palette.dart';
 
+final formKey = GlobalKey<FormState>();
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
 final RegExp emailRegex = new RegExp(

@@ -17,7 +17,7 @@ class _SignInState extends State<SignIn> {
   bool isForgetPassword = false;
   bool isMale = true;
   bool isRememberMe = false;
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
 
   @override
@@ -201,7 +201,7 @@ class _SignInState extends State<SignIn> {
     return Container(
       margin: EdgeInsets.only(top: 20),
       child: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           children: [
             buildTextField(),
@@ -245,7 +245,7 @@ class _SignInState extends State<SignIn> {
     return Container(
       margin: EdgeInsets.only(top: 20),
       child: Form(
-        key: _formKey,
+        key: formKey,
         child: Column(
           children: [
             buildTextField(),
@@ -282,7 +282,7 @@ class _SignInState extends State<SignIn> {
     if (!isSignupScreen) {
       //sign in block
 
-      if(_formKey.currentState!.validate()){
+      if(formKey.currentState!.validate()){
         setState(() {
           isLoading = true;
         });
@@ -303,7 +303,10 @@ class _SignInState extends State<SignIn> {
             setState(() {
               isLoading = false;
             });
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(value),
+                backgroundColor: Colors.red.shade400,)
+            );
           }
         }
         );
@@ -314,7 +317,7 @@ class _SignInState extends State<SignIn> {
     else {
         //sign up block
 
-      if(_formKey.currentState!.validate()){
+      if(formKey.currentState!.validate()){
         setState(() {
           isLoading = true;
         });
@@ -336,7 +339,11 @@ class _SignInState extends State<SignIn> {
             setState(() {
               isLoading = false;
             });
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(value)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(value),
+              backgroundColor: Colors.red.shade400,
+            )
+            );
           }
         });
       }
