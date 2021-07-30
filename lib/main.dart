@@ -1,10 +1,11 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gig_worker/screens/wrapper.dart';
-import 'package:provider/provider.dart';
-import 'package:gig_worker/models/user.dart';
-import 'package:gig_worker/services/database.dart';
+import 'package:gig_worker/screens/authenticate/sign_in.dart';
+import 'package:gig_worker/screens/home/home.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 
 void main() {
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     //tracking and listening to User for changes
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
         home: fHome(),
       );
 
@@ -35,6 +37,12 @@ class fHome extends StatefulWidget {
 
 class _fHomeState extends State<fHome> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+  }
+  @override
   Widget build(BuildContext context) {
     final Future<FirebaseApp> _initialization = Firebase.initializeApp();
     //Database db = Database();
@@ -50,15 +58,33 @@ class _fHomeState extends State<fHome> {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            return Wrapper();
+            return decide();
           }
 
+          Timer(Duration(seconds: 3),(){});
           // Otherwise, show something whilst waiting for initialization to complete
-          return Center(child: CircularProgressIndicator(),);
+          return Container(
+
+            child:Center(
+                child: Center(child: CircularProgressIndicator(),)
+
+        ),
+            color: Color(0xFF3B5999),
+          );
         },
       );
     }
+  Widget decide(){
+    FirebaseAuth auth =FirebaseAuth.instance;
+    if(auth.currentUser == null)return SignIn();
+    else{ return Home();}
+
+
+
   }
+
+  }
+
 
 
 

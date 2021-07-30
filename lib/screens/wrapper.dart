@@ -11,7 +11,7 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
+
       home: decide(),
 
 
@@ -22,5 +22,11 @@ class Wrapper extends StatelessWidget {
     FirebaseAuth auth =FirebaseAuth.instance;
     if(auth.currentUser == null)return SignIn();
     else{ return Home();}
+    //Color(0xFF3B5999)
+
+
   }
+
 }
+
+

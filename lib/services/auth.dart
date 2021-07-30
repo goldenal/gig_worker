@@ -55,7 +55,7 @@ Future<String> resetPassword(String email)async{
   catch (e) {
     return "error occured";
   }
-  return "";
+
 }
 void signOut(){
   auth.signOut();

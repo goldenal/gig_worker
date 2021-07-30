@@ -1,3 +1,4 @@
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:gig_worker/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gig_worker/palette/palette.dart';
@@ -192,7 +193,9 @@ class _SignInState extends State<SignIn> {
           // Bottom buttons
         ],
       ) :
-      Center(child: CircularProgressIndicator(),
+      Center(child: SpinKitWanderingCubes(
+        color: Color(0xFF3B5999),
+      ),
       ),
     );
   }
