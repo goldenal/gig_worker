@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:gig_worker/models/gigs.dart';
+import 'package:gig_worker/models/user.dart';
 
 class Database {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<void> create(String gigName, String amount, String location, String fromtimePeriod, String totimePeriod) async {
+  Future<void> create(String gigName, String amount, String location, String fromtimePeriod,
+      String totimePeriod, String details) async {
     try {
       await firestore.collection("Gigs").add({
         'gigName': gigName,
@@ -12,7 +14,8 @@ class Database {
         'location': location,
         'fromtimePeriod': fromtimePeriod,
         'totimePeriod': totimePeriod,
-        'timestamp': FieldValue.serverTimestamp()
+        'timestamp': FieldValue.serverTimestamp(),
+        'details' : details
       });
     } catch (e) {
       print(e);
@@ -26,6 +29,13 @@ class Database {
       print(e);
     }
   }
+
+
+
+
+
+
+
 
   // Future<List> read() async {
     // FirebaseFirestore? _instance;

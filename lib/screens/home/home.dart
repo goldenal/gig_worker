@@ -4,12 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gig_worker/screens/authenticate/sign_in.dart';
 import 'package:gig_worker/palette/palette.dart';
+import 'package:gig_worker/models/gigs.dart';
+import 'package:gig_worker/services/database.dart';
+
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Hompage(),
     );
   }
@@ -25,6 +29,8 @@ class _HompageState extends State<Hompage> {
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Gigs').snapshots();
   FirebaseAuth _auth = FirebaseAuth.instance;
   Palette _palette = Palette();
+
+
 
 
 @override
@@ -111,18 +117,27 @@ void initState() {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator(),);
         }
-
-        return new ListView(
-          children: snapshot.data!.docs.map((DocumentSnapshot document) {
-            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-            return _buildCard(data['gigName'], data['amount'], data['location'], data['fromtimePeriod'],
-                data['totimePeriod']);
-            // return new ListTile(
-            //   title: new Text(data['full_name']),
-            //   subtitle: new Text(data['company']),
-            // );
-          }).toList(),
+        List<Gigs> gigList = gigListFromSnapshot(snapshot)?? [];
+        return ListView.builder(
+          itemCount: gigList.length,
+          itemBuilder: (context, index) {
+            return _buildCard(gigList[index].name, gigList[index].amount,
+                gigList[index].location, gigList[index].tfrom,
+                gigList[index].tto);
+          },
         );
+
+        // return new ListView(
+        //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
+        //     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        //     return _buildCard(data['gigName'], data['amount'], data['location'], data['fromtimePeriod'],
+        //         data['totimePeriod']);
+        //     // return new ListTile(
+        //     //   title: new Text(data['full_name']),
+        //     //   subtitle: new Text(data['company']),
+        //     // );
+        //   }).toList(),
+        // );
 
 
       },
@@ -130,6 +145,15 @@ void initState() {
 
     );
 
+  }
+  List<Gigs> gigListFromSnapshot(snapshot) {
+    return snapshot.data.docs.map<Gigs>((DocumentSnapshot document){
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+      return
+        Gigs(data['gigName'] ?? '', data['amount'],
+            data['totimePeriod'], data['fromtimePeriod'], data['location'], data['location']);
+    }).toList();
   }
 
 }
