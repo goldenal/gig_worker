@@ -1,3 +1,4 @@
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,7 @@ class Home extends StatelessWidget {
     );
   }
 }
+
 class Hompage extends StatefulWidget {
   const Hompage({Key? key}) : super(key: key);
 
@@ -26,52 +28,49 @@ class Hompage extends StatefulWidget {
 }
 
 class _HompageState extends State<Hompage> {
-  final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Gigs').snapshots();
+  final Stream<QuerySnapshot> _usersStream =
+      FirebaseFirestore.instance.collection('Gigs').snapshots();
   FirebaseAuth _auth = FirebaseAuth.instance;
   Palette _palette = Palette();
+  int index = 0;
 
-
-
-
-@override
-void initState() {
-  super.initState();
-}
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF3B5999) ,
+        backgroundColor: Color(0xFF3B5999),
         title: Text('Available jobs'),
-          actions: <Widget>[
-      FlatButton.icon(
-      icon: Icon(Icons.settings),
-      label: Text('logout'),
-      onPressed: () async {
-        await _auth.signOut();
-        if(_auth.currentUser == null){
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => SignIn()),
-                  (route) => false);
-        }
-      },
-    )],
-  ),
+        actions: <Widget>[
+          FlatButton.icon(
+            icon: Icon(Icons.settings),
+            label: Text('logout'),
+            onPressed: () async {
+              await _auth.signOut();
+              if (_auth.currentUser == null) {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => SignIn()),
+                    (route) => false);
+              }
+            },
+          )
+        ],
+      ),
       body: streamWiget(context),
+      bottomNavigationBar: buildbottombar(),
     );
   }
 
-
-
-
-  Widget _buildCard (String gigName, String amount, String location, String fromtimePeriod, String totimePeriod){
+  Widget _buildCard(String gigName, String amount, String location,
+      String fromtimePeriod, String totimePeriod) {
     return Card(
       margin: EdgeInsets.all(8.0),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
       elevation: 7.0,
       child: Padding(
         padding: const EdgeInsets.fromLTRB(14.0, 20.0, 14.0, 20.0),
@@ -82,47 +81,53 @@ void initState() {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(gigName,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold
-                ),),
-                Text('\$$amount',
-                  style: TextStyle(
-                      color: Colors.green.shade300,
-                      fontSize: 15.0
-                  ),)
+                Text(
+                  gigName,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '\$$amount',
+                  style:
+                      TextStyle(color: Colors.green.shade300, fontSize: 15.0),
+                )
               ],
             ),
-            SizedBox(height: 12.0,),
+            SizedBox(
+              height: 12.0,
+            ),
             Text("$fromtimePeriod " + " - " + "$totimePeriod"),
-            SizedBox(height: 4.0,),
+            SizedBox(
+              height: 4.0,
+            ),
             Text(location),
-
           ],
-
         ),
       ),
     );
   }
 
-
-  Widget streamWiget(BuildContext context){
+  Widget streamWiget(BuildContext context) {
     return new StreamBuilder<QuerySnapshot>(
       stream: _usersStream,
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Something went wrong'));
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator(),);
+          return Center(
+            child: CircularProgressIndicator(),
+          );
         }
-        List<Gigs> gigList = gigListFromSnapshot(snapshot)?? [];
+        List<Gigs> gigList = gigListFromSnapshot(snapshot) ?? [];
         return ListView.builder(
           itemCount: gigList.length,
           itemBuilder: (context, index) {
-            return _buildCard(gigList[index].name, gigList[index].amount,
-                gigList[index].location, gigList[index].tfrom,
+            return _buildCard(
+                gigList[index].name,
+                gigList[index].amount,
+                gigList[index].location,
+                gigList[index].tfrom,
                 gigList[index].tto);
           },
         );
@@ -138,22 +143,52 @@ void initState() {
         //     // );
         //   }).toList(),
         // );
-
-
       },
+    );
+  }
 
+  List<Gigs> gigListFromSnapshot(snapshot) {
+    return snapshot.data.docs.map<Gigs>((DocumentSnapshot document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+      return Gigs(data['gigName'] ?? '', data['amount'], data['totimePeriod'],
+          data['fromtimePeriod'], data['location'], data['location']);
+    }).toList();
+  }
+
+  buildbottombar() {
+    final inactivecolor= Colors.grey;
+    return BottomNavyBar(
+      selectedIndex: index,
+        containerHeight: 65.0,
+        onItemSelected: (index) => setState(() => this.index = index),
+        items: <BottomNavyBarItem>[
+          BottomNavyBarItem(
+              icon: Icon(Icons.home),
+              title: Text('home'),
+            textAlign: TextAlign.center,
+            activeColor: Color(0xFF3B5999),
+            inactiveColor: inactivecolor
+
+          ),
+          BottomNavyBarItem(
+              icon: Icon(Icons.dynamic_feed_sharp),
+              title: Text('Requests'),
+              textAlign: TextAlign.center,
+              activeColor: Color(0xFF3B5999),
+              inactiveColor: inactivecolor
+
+          ),
+          BottomNavyBarItem(
+              icon: Icon(Icons.person),
+              title: Text('settings'),
+              textAlign: TextAlign.center,
+              activeColor: Color(0xFF3B5999),
+              inactiveColor: inactivecolor
+          )
+        ]
 
     );
 
   }
-  List<Gigs> gigListFromSnapshot(snapshot) {
-    return snapshot.data.docs.map<Gigs>((DocumentSnapshot document){
-      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
-      return
-        Gigs(data['gigName'] ?? '', data['amount'],
-            data['totimePeriod'], data['fromtimePeriod'], data['location'], data['location']);
-    }).toList();
-  }
-
 }

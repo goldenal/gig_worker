@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gig_worker/models/gigs.dart';
 import 'package:gig_worker/models/user.dart';
 
 class Database {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
+  CollectionReference gusers = FirebaseFirestore.instance.collection('GigUsers');
+ // User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> create(String gigName, String amount, String location, String fromtimePeriod,
+  Future<void> createGig(String gigName, String amount, String location, String fromtimePeriod,
       String totimePeriod, String details) async {
     try {
       await firestore.collection("Gigs").add({
@@ -28,6 +31,25 @@ class Database {
     } catch (e) {
       print(e);
     }
+  }
+  Future<void> addUser(UserCredential userCredential) {
+    // FirebaseAu
+    // userCredential.user[uid];
+    return gusers
+        .doc(userCredential.user!.uid)
+        .set({
+      'age': 18,
+      'uid': userCredential.user!.uid,
+      'email': userCredential.user!.email,
+      'firstName': 'new user',
+      'lastName': ' ',
+      'sex' : ' ',
+      'phone': '0',
+      'isAdmin': 0,
+      'isVerified': 0,
+    })
+        .then((value) => print("User Added"))
+        .catchError((error) => print("Failed to add user: $error"));
   }
 
 

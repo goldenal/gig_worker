@@ -1,6 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gig_worker/models/user.dart';
+import 'package:gig_worker/services/database.dart';
 
 class AuthServices {
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -13,6 +14,8 @@ Future<String> createAccount(String email,String password)async{
         email: email,
         password: password
     );
+    Database db = Database();
+    db.addUser(userCredential);
     return "Acount_created";
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
