@@ -33,6 +33,8 @@ class _HompageState extends State<Hompage> {
   FirebaseAuth _auth = FirebaseAuth.instance;
   Palette _palette = Palette();
   int index = 0;
+  bool _isAdmin = true;
+  List<Gigs> gigList = [];
 
   @override
   void initState() {
@@ -60,6 +62,14 @@ class _HompageState extends State<Hompage> {
             },
           )
         ],
+      ),
+      floatingActionButton: Visibility(
+        visible:_isAdmin ,
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          backgroundColor: Colors.orange,
+          onPressed: (){},
+        )
       ),
       body: streamWiget(context),
       bottomNavigationBar: buildbottombar(),
@@ -119,7 +129,9 @@ class _HompageState extends State<Hompage> {
             child: CircularProgressIndicator(),
           );
         }
-        List<Gigs> gigList = gigListFromSnapshot(snapshot) ?? [];
+
+          gigList = gigListFromSnapshot(snapshot) ?? [];
+
         return ListView.builder(
           itemCount: gigList.length,
           itemBuilder: (context, index) {
@@ -191,4 +203,6 @@ class _HompageState extends State<Hompage> {
     );
 
   }
+
+
 }
