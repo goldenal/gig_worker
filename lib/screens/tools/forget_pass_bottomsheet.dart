@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:gig_worker/screens/tools/mtextButton.dart';
 import 'package:gig_worker/screens/tools/mtextfield.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/services/auth.dart';
@@ -32,7 +30,7 @@ class _forgetPasswordState extends State<forgetPassword> {
       child: Column(
         children: <Widget>[
           SizedBox(height: 20,),
-          buildTextField(),
+          buildEmailTextField(),
           SizedBox(height: 40,),
           buildTextButton("Reset password",Palette.facebookColor,context),
           _loading == true ? CircularProgressIndicator(): Text("")

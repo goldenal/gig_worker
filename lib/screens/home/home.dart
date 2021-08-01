@@ -6,7 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gig_worker/screens/authenticate/sign_in.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/models/gigs.dart';
+import 'package:gig_worker/screens/detailedPage.dart';
 import 'package:gig_worker/services/database.dart';
+import 'package:gig_worker/screens/tools/new_gig_page.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -31,22 +33,46 @@ class _HompageState extends State<Hompage> {
   final Stream<QuerySnapshot> _usersStream =
       FirebaseFirestore.instance.collection('Gigs').snapshots();
   FirebaseAuth _auth = FirebaseAuth.instance;
+  User? user = FirebaseAuth.instance.currentUser;
   Palette _palette = Palette();
   int index = 0;
-  bool _isAdmin = true;
+  bool _isAdmin = false;
   List<Gigs> gigList = [];
+
 
   @override
   void initState() {
     super.initState();
+
+    FirebaseFirestore.instance
+        .collection('GigUsers')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        setState(() {
+          _isAdmin = data['isAdmin'] == 1 ? true : false;
+        });
+
+        print(_isAdmin);
+
+
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF3B5999),
-        title: Text('Available jobs'),
+        backgroundColor: Colors.white,
+        title: Text('Available jobs',
+        style: TextStyle(
+            color: Color(0xFF3B5999),
+        ),),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.settings),
@@ -68,7 +94,13 @@ class _HompageState extends State<Hompage> {
         child: FloatingActionButton(
           child: const Icon(Icons.add),
           backgroundColor: Colors.orange,
-          onPressed: (){},
+          onPressed: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => newGig()),
+                    );
+          //  showNewGigForm(context);
+          },
         )
       ),
       body: streamWiget(context),
@@ -135,26 +167,23 @@ class _HompageState extends State<Hompage> {
         return ListView.builder(
           itemCount: gigList.length,
           itemBuilder: (context, index) {
-            return _buildCard(
-                gigList[index].name,
-                gigList[index].amount,
-                gigList[index].location,
-                gigList[index].tfrom,
-                gigList[index].tto);
+            return GestureDetector(
+              onTap: (){
+               selectedGig =   gigList[index];
+               //print(selectedGig.name);
+                showdetails(context);
+              },
+              child: _buildCard(
+                  gigList[index].name,
+                  gigList[index].amount,
+                  gigList[index].location,
+                  gigList[index].tfrom,
+                  gigList[index].tto),
+            );
           },
         );
 
-        // return new ListView(
-        //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-        //     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-        //     return _buildCard(data['gigName'], data['amount'], data['location'], data['fromtimePeriod'],
-        //         data['totimePeriod']);
-        //     // return new ListTile(
-        //     //   title: new Text(data['full_name']),
-        //     //   subtitle: new Text(data['company']),
-        //     // );
-        //   }).toList(),
-        // );
+
       },
     );
   }
@@ -164,7 +193,7 @@ class _HompageState extends State<Hompage> {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
       return Gigs(data['gigName'] ?? '', data['amount'], data['totimePeriod'],
-          data['fromtimePeriod'], data['location'], data['location']);
+          data['fromtimePeriod'], data['location'], data['details']?? 'not available');
     }).toList();
   }
 
@@ -202,6 +231,25 @@ class _HompageState extends State<Hompage> {
 
     );
 
+  }
+
+
+  String retrdata() {
+
+    FirebaseFirestore.instance
+        .collection('GigUsers')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+       String _admin = data['isAdmin'];
+       print(_admin);
+      } else {
+        print('Document does not exist on the database');
+      }
+    });
+    return "";
   }
 
 

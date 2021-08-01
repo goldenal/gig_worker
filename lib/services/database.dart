@@ -6,9 +6,10 @@ import 'package:gig_worker/models/user.dart';
 class Database {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference gusers = FirebaseFirestore.instance.collection('GigUsers');
- // User? user = FirebaseAuth.instance.currentUser;
+  CollectionReference userResponse = FirebaseFirestore.instance.collection('Response');
+  //User? user = FirebaseAuth.instance.currentUser;
 
-  Future<void> createGig(String gigName, String amount, String location, String fromtimePeriod,
+  Future<String> createGig(String gigName, String amount, String location, String fromtimePeriod,
       String totimePeriod, String details) async {
     try {
       await firestore.collection("Gigs").add({
@@ -20,8 +21,9 @@ class Database {
         'timestamp': FieldValue.serverTimestamp(),
         'details' : details
       });
+      return "success";
     } catch (e) {
-      print(e);
+      return(e.toString());
     }
   }
 
@@ -51,6 +53,39 @@ class Database {
         .then((value) => print("User Added"))
         .catchError((error) => print("Failed to add user: $error"));
   }
+
+  Future<String> createResponses(String gigName, String userId) async {
+    try {
+      await firestore.collection("Response").add({
+        'gigName': gigName,
+        'gigApplicant': userId,
+        'approved': '0'
+      });
+      return "success";
+    } catch (e) {
+      return(e.toString());
+    }
+  }
+
+  Future<String> createResponse(String gigName, String userId) async{
+    // FirebaseAu
+    // userCredential.user[uid];
+    try{
+      await userResponse
+          .doc(userId)
+          .set({
+        'gigName': gigName,
+        'gigApplicant': userId,
+        'approved': '0'
+      });
+      return "success";
+    }catch(e){
+      return(e.toString());
+    }
+
+  }
+
+
 
 
 

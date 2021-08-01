@@ -3,7 +3,7 @@ import 'package:gig_worker/services/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/screens/tools/mtextfield.dart';
-import 'package:gig_worker/screens/tools/bottomsheet.dart';
+import 'package:gig_worker/screens/tools/forget_pass_bottomsheet.dart';
 import 'package:gig_worker/screens/home/home.dart';
 //import 'package:gig_worker/screens/tools/bottomHalfContainer.dart';
 
@@ -207,7 +207,7 @@ class _SignInState extends State<SignIn> {
         key: formKey,
         child: Column(
           children: [
-            buildTextField(),
+            buildEmailTextField(),
             buildPasswrdTextField(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -251,7 +251,7 @@ class _SignInState extends State<SignIn> {
         key: formKey,
         child: Column(
           children: [
-            buildTextField(),
+            buildEmailTextField(),
             buildPasswrdTextField(),
             SizedBox(
               height: 40,
