@@ -13,8 +13,9 @@ TextEditingController toController = TextEditingController();
 TextEditingController detailController = TextEditingController();
 
 //controller for profile page
-TextEditingController firstNameController = TextEditingController();
-TextEditingController lastNameController = TextEditingController();
+TextEditingController firstNameController = TextEditingController
+    .fromValue(new TextEditingValue(text: "adewale" ));
+TextEditingController lastNameController = TextEditingController(text: "hghg");
 TextEditingController sexController = TextEditingController();
 TextEditingController phoneController = TextEditingController();
 //TextEditingController emailController = TextEditingController();

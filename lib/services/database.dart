@@ -5,12 +5,16 @@ import 'package:gig_worker/models/user.dart';
 
 class Database {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
-  CollectionReference gusers = FirebaseFirestore.instance.collection('GigUsers');
-  CollectionReference userResponse = FirebaseFirestore.instance.collection('Response');
+  CollectionReference gusers = FirebaseFirestore.instance.collection(
+      'GigUsers');
+  CollectionReference userResponse = FirebaseFirestore.instance.collection(
+      'Response');
   User? user = FirebaseAuth.instance.currentUser;
+
   //User? user = FirebaseAuth.instance.currentUser;
 
-  Future<String> createGig(String gigName, String amount, String location, String fromtimePeriod,
+  Future<String> createGig(String gigName, String amount, String location,
+      String fromtimePeriod,
       String totimePeriod, String details) async {
     try {
       await firestore.collection("Gigs").add({
@@ -20,11 +24,11 @@ class Database {
         'fromtimePeriod': fromtimePeriod,
         'totimePeriod': totimePeriod,
         'timestamp': FieldValue.serverTimestamp(),
-        'details' : details
+        'details': details
       });
       return "success";
     } catch (e) {
-      return(e.toString());
+      return (e.toString());
     }
   }
 
@@ -35,6 +39,7 @@ class Database {
       print(e);
     }
   }
+
   Future<void> addUser(UserCredential userCredential) {
     // FirebaseAu
     // userCredential.user[uid];
@@ -46,7 +51,7 @@ class Database {
       'email': userCredential.user!.email,
       'firstName': 'new user',
       'lastName': ' ',
-      'sex' : ' ',
+      'sex': ' ',
       'phone': '0',
       'isAdmin': 0,
       'isVerified': 0,
@@ -64,20 +69,70 @@ class Database {
       });
       return "success";
     } catch (e) {
-      return(e.toString());
+      return (e.toString());
     }
   }
 
-  Future<String> createResponse(String gigName, String userId) async{
+  Future<String> createResponse(String gigName, String userId,String firstname,
+      String lastname,String phone,) async {
     // FirebaseAu
     // userCredential.user[uid];
-    try{
+    try {
       await userResponse
           .doc(userId)
           .set({
         'gigName': gigName,
         'gigApplicant': userId,
-        'approved': '0'
+        'approved': '0',
+        'lastname': lastname,
+        'firstname': firstname,
+        'phone': phone
+      });
+      return "success";
+    } catch (e) {
+      return (e.toString());
+    }
+  }
+
+
+  // checks the data base if the current user is an admin
+  void retrdata() {
+    FirebaseFirestore.instance
+        .collection('GigUsers')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data() as Map<
+            String,
+            dynamic>;
+        // return data['isAdmin'] == 1 ? true : false;
+
+      } else {
+        print('Document does not exist on the database');
+        return false;
+      }
+    });
+  }
+
+
+//update user
+  Future<String> updateCurrentUser(String firstName, String email,String lastName,
+      String sex,String phone,int admin,int verified) async{
+
+    try{
+      await gusers
+          .doc(user!.uid)
+          .set({
+        'age': 18,
+        'uid': user!.uid,
+        'email': email,
+        'firstName':firstName ,
+        'lastName': lastName,
+        'sex': sex,
+        'phone': phone,
+        'isAdmin': admin,
+        'isVerified': verified,
       });
       return "success";
     }catch(e){
@@ -87,84 +142,7 @@ class Database {
   }
 
 
-  // checks the data base if the current user is an admin
-  // Future<bool> retrdata() async{
-  //   try{
-  //     await FirebaseFirestore.instance
-  //         .collection('GigUsers')
-  //         .doc(user!.uid)
-  //         .get()
-  //         .then((DocumentSnapshot documentSnapshot) {
-  //       if (documentSnapshot.exists) {
-  //         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-  //         return data['isAdmin'] == 1 ? true : false;
-  //
-  //       } else {
-  //         print('Document does not exist on the database');
-  //         return false;
-  //       }
-  //     });
-  //   }
-  //   catch(e){
-  //     print(e.toString());
-  //   }
-  //
-  //
-  // }
-
-
-
-
-
-
-
-
-
-
-  // Future<List> read() async {
-    // FirebaseFirestore? _instance;
-    // _instance = FirebaseFirestore.instance;
-    // final gigcollection = _instance.collection('Gigs').get();
-
-
-
-
-  //   QuerySnapshot querySnapshot;
-  //   List gigsDoc = [];
-  //   try {
-  //     print('tried querying');
-  //     querySnapshot =
-  //     await firestore.collection('Gigs').get();
-  //     if (querySnapshot.docs.isNotEmpty) {
-  //       for (var doc in querySnapshot.docs.toList()) {
-  //         Map a = {"id": doc.id,
-  //           "gigName": doc['name'],
-  //           'amount':  doc['amount'],
-  //           'location':  doc['location'],
-  //           'fromtimePeriod':  doc['fromtimePeriod'],
-  //           'totimePeriod':  doc['totimePeriod'],
-  //         };
-  //
-  //
-  //         gigsDoc.add(a);
-  //       }
-  //
-  //       return gigsDoc;
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  //   return gigsDoc;
-  // }
-
-  // Future<void> update(String id, String name, String code) async {
-  //   try {
-  //     await firestore
-  //         .collection("countries")
-  //         .doc(id)
-  //         .update({'name': name, 'code': code});
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
 }
+
+
+

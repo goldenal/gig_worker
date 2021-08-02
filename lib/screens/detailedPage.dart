@@ -34,7 +34,9 @@ class _detailedPageState extends State<detailedPage> {
   String totimePeriod = selectedGig.tto;
   String location = selectedGig.location;
   String details = selectedGig.details;
-  String name = "";
+  String fname = "";
+  String lname = "";
+  String uPhone = "";
 
   @override
   Widget build(BuildContext context) {
@@ -104,22 +106,25 @@ class _detailedPageState extends State<detailedPage> {
             data['lastName'], data['sex'], data['phone'],
             data['isAdmin'], data['isVerified'], uid: data['uid']);
             setState(() {
-              name = guser.firstName;
+              fname = guser.firstName;
+              lname = guser.lastName;
+              uPhone = guser.phone;
             });
 
       } else {
-        print('mmDocument does not exist on the database');
+        print('Document does not exist on the database');
       }
     });
-
 
     TextButton textButton;
     textButton =  TextButton(
       onPressed: (){
+
+        print(selectedGig.name);
         setState(() {
           _loading = true;
         });
-        _db.createResponse(name, id).then((value) {
+        _db.createResponse(selectedGig.name, id,fname,lname,uPhone).then((value) {
           if(value == "success"){
             setState(() {
               _loading = false;

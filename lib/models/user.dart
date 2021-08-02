@@ -2,10 +2,10 @@ class GUser {
 
   final String uid;
   final String email;
-  final String firstName;
+  late  String firstName;
   final String lastName;
   final String sex;
-  final String phone;
+  late  String phone;
   final int isAdmin;
   final int isVerified;
 

@@ -22,9 +22,11 @@ class _responsePageState extends State<responsePage> {
   User? user = FirebaseAuth.instance.currentUser;
   CollectionReference users = FirebaseFirestore.instance.collection('Response');
   final Stream<QuerySnapshot> _usersStream = FirebaseFirestore.instance.collection('Response').snapshots();
+  final Stream<QuerySnapshot> _usersGigStream = FirebaseFirestore.instance.collection('GigUsers').snapshots();
   Database _db = Database();
   bool _isAdmin = false;
   List<Response> responseList = [];
+  List<GUser> userList = [];
   String fname = "";
   String lname = "";
   String uPhone = "";
@@ -57,7 +59,7 @@ class _responsePageState extends State<responsePage> {
   @override
   Widget build(BuildContext context) {
    // selectedgUser = retriveApplicantdata();
-
+    streamUserWiget(context);
 
     return _isAdmin == true ? streamWiget(context):
     FutureBuilder<DocumentSnapshot>(
@@ -66,11 +68,11 @@ class _responsePageState extends State<responsePage> {
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
         if (snapshot.hasError) {
-          return Center(child: Text("No Active Gigs"));
+          return Center(child: Text("Error occured"));
         }
 
         if (snapshot.hasData && !snapshot.data!.exists) {
-          return Text("Document does not exist");
+          return Center(child: Text("No gigs yet"));
         }
 
         if (snapshot.connectionState == ConnectionState.done) {
@@ -116,6 +118,7 @@ class _responsePageState extends State<responsePage> {
           );
         }
 
+
         responseList = responseListFromSnapshot(snapshot) ?? [];
 
         return ListView.builder(
@@ -130,10 +133,10 @@ class _responsePageState extends State<responsePage> {
               },
               child: _buildCard(
                   responseList[index].gigName,
-                 fname,
-                  lname,
-                  uPhone,
-                  index
+                 responseList[index].applicantFname,
+                  responseList[index].applicantLname,
+                  responseList[index].applicantPhone
+
               ),
             );
           },
@@ -149,7 +152,41 @@ class _responsePageState extends State<responsePage> {
     return snapshot.data.docs.map<Response>((DocumentSnapshot document) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-      return Response(data['gigName'] ?? '', data['gigApplicant'], data['approved']);
+      return Response(data['gigName'] ?? '', data['gigApplicant'],data['approved'], data['firstname'],data['lastname'],
+          data['phone']);
+
+    }).toList();
+  }
+
+
+  Widget streamUserWiget(BuildContext context) {
+    return new StreamBuilder<QuerySnapshot>(
+      stream: _usersGigStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Center(child: Text('Something went wrong'));
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        userList = userListFromSnapshot(snapshot) ?? [];
+
+        return Text('');
+
+      },
+    );
+  }
+  List<GUser> userListFromSnapshot(snapshot) {
+    return snapshot.data.docs.map<GUser>((DocumentSnapshot document) {
+      Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+      return GUser( data['email'], data['firstName'],
+          data['lastName'], data['sex'], data['phone'],
+          data['isAdmin'], data['isVerified'], uid: data['uid']);
     }).toList();
   }
 
@@ -167,7 +204,6 @@ class _responsePageState extends State<responsePage> {
            data['isAdmin'], data['isVerified'], uid: data['uid']);
        setState(() {
          fname = guser.firstName;
-         print('my anme $fname');
          lname = guser.lastName;
          uPhone = guser.phone;
        });
@@ -181,7 +217,7 @@ class _responsePageState extends State<responsePage> {
   }
 
   Widget _buildCard(String gigName, String userfirstName, String userLastName,
-      String phone,int index) {
+      String phone) {
 
     return Card(
       margin: EdgeInsets.all(8.0),
