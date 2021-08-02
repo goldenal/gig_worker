@@ -38,6 +38,7 @@ class _Settings_pageState extends State<Settings_page> {
   String _fname = "", _lname= "",_sex = "", _phone = "", _age = "";
    late GUser _gUser;
   final _formKey = GlobalKey<FormState>();
+  bool _isloading  = false;
   Database _db = Database();
 
   @override
@@ -186,7 +187,8 @@ class _Settings_pageState extends State<Settings_page> {
                       height: 50,
                       width: double.infinity,
                       child: buildTextButton('update', Colors.orange,context)
-                    )
+                    ),
+                    _isloading == false ? Text(''): Center(child: CircularProgressIndicator(),)
                   ],
                 ),
               ),
@@ -237,6 +239,7 @@ class _Settings_pageState extends State<Settings_page> {
       String title, Color backgroundColor, BuildContext context) {
     return TextButton(
       onPressed: (){
+
         if(_formKey.currentState!.validate()){
           Database().updateCurrentUser(firstNameController.text.trim(), emailController.text.trim(),
               lastNameController.text.trim(), sexController.text.trim(), phoneController.text.trim(),
@@ -248,12 +251,12 @@ class _Settings_pageState extends State<Settings_page> {
                     backgroundColor: Colors.green.shade400,)
                   );
                 }
-                // else{
-                //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                //     content: Text('Error'),
-                //     backgroundColor: Colors.red.shade400,)
-                //   );
-                // }
+                else{
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text('Error'),
+                    backgroundColor: Colors.red.shade400,)
+                  );
+                }
            });
         }
       },

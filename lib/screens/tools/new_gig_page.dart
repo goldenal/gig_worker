@@ -46,7 +46,7 @@ class _new_GigState extends State<new_Gig> {
   Database _db = Database();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _loading == false ? Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text('Create new Gigs',
@@ -81,7 +81,7 @@ class _new_GigState extends State<new_Gig> {
           ),
         ),
       ),
-    );
+    ) : Center(child: CircularProgressIndicator(),);
   }
 
 
@@ -102,8 +102,20 @@ class _new_GigState extends State<new_Gig> {
                   context,
                   MaterialPageRoute(builder: (context) => Home()),
                       (route) => false);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Successfully Added'),
+                backgroundColor: Colors.green.shade400,)
+              );
             }
             else{
+              setState(() {
+                _loading = false;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Error'),
+                backgroundColor: Colors.red.shade400,)
+              );
+
               print(value);
             }
       }
