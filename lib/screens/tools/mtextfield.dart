@@ -4,12 +4,22 @@ import 'package:gig_worker/palette/palette.dart';
 final formKey = GlobalKey<FormState>();
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
+
 TextEditingController nameController = TextEditingController();
 TextEditingController amountController = TextEditingController();
 TextEditingController locationController = TextEditingController();
 TextEditingController fromController = TextEditingController();
 TextEditingController toController = TextEditingController();
 TextEditingController detailController = TextEditingController();
+
+//controller for profile page
+TextEditingController firstNameController = TextEditingController();
+TextEditingController lastNameController = TextEditingController();
+TextEditingController sexController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+//TextEditingController emailController = TextEditingController();
+TextEditingController ageController = TextEditingController();
+
 
 final RegExp emailRegex = new RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,253}[a-zA-Z0-9])?)*$");

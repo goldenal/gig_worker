@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:gig_worker/screens/Settings.dart';
 import 'package:gig_worker/screens/authenticate/sign_in.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/models/gigs.dart';
@@ -88,7 +89,7 @@ class _HompageState extends State<Hompage> {
         ],
       ),
       floatingActionButton: Visibility(
-        visible:_isAdmin ,
+        visible:_isAdmin && (index != 2 && index !=  1) ,
         child: FloatingActionButton(
           child: const Icon(Icons.add),
           backgroundColor: Colors.orange,
@@ -241,6 +242,8 @@ class _HompageState extends State<Hompage> {
     switch(index){
       case 1:
         return responsePage();
+      case 2:
+        return Settings_page();
       default:
         return streamWiget(context);
     }
@@ -251,6 +254,11 @@ Widget titleSelector(){
   switch(index){
     case 1:
       return Text("Active Gig",
+        style: TextStyle(
+          color: Color(0xFF3B5999),
+        ),);
+    case 2:
+      return Text("Profile",
         style: TextStyle(
           color: Color(0xFF3B5999),
         ),);
