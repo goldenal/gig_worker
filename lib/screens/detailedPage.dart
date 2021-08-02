@@ -4,8 +4,10 @@ import 'package:gig_worker/models/gigs.dart';
 import 'package:gig_worker/screens/tools/mtextfield.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/services/auth.dart';
+import 'package:gig_worker/models/user.dart';
 import 'package:gig_worker/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 void showdetails(BuildContext context){
   showModalBottomSheet(context: context, builder: (context){
@@ -32,6 +34,7 @@ class _detailedPageState extends State<detailedPage> {
   String totimePeriod = selectedGig.tto;
   String location = selectedGig.location;
   String details = selectedGig.details;
+  String name = "";
 
   @override
   Widget build(BuildContext context) {
@@ -89,8 +92,29 @@ class _detailedPageState extends State<detailedPage> {
   }
 
   TextButton buildTextButton(
-      String title, Color backgroundColor,String name, String id, BuildContext context) {
-    return TextButton(
+      String title, Color backgroundColor,String nameg, String id, BuildContext context) {
+    FirebaseFirestore.instance
+        .collection('GigUsers')
+        .doc(user!.uid)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+         GUser guser = GUser( documentSnapshot!['email'], documentSnapshot!['firstName'],
+            data['lastName'], data['sex'], data['phone'],
+            data['isAdmin'], data['isVerified'], uid: data['uid']);
+            setState(() {
+              name = guser.firstName;
+            });
+
+      } else {
+        print('mmDocument does not exist on the database');
+      }
+    });
+
+
+    TextButton textButton;
+    textButton =  TextButton(
       onPressed: (){
         setState(() {
           _loading = true;
@@ -133,5 +157,6 @@ class _detailedPageState extends State<detailedPage> {
         ],
       ),
     );
+    return textButton;
   }
 }

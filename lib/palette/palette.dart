@@ -1,5 +1,7 @@
 import 'package:flutter/painting.dart';
 import 'package:gig_worker/models/gigs.dart';
+import 'package:gig_worker/models/user.dart';
+import 'package:gig_worker/models/userResponse.dart';
 
 class Palette {
   static const Color iconColor = Color(0xFFB6C7D1);
@@ -11,3 +13,5 @@ class Palette {
   static const Color backgroundColor = Color(0xFFECF3F9);
 }
 late Gigs selectedGig;
+late Response selectedResponse;
+late GUser selectedgUser;

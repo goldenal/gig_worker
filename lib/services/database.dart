@@ -7,6 +7,7 @@ class Database {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   CollectionReference gusers = FirebaseFirestore.instance.collection('GigUsers');
   CollectionReference userResponse = FirebaseFirestore.instance.collection('Response');
+  User? user = FirebaseAuth.instance.currentUser;
   //User? user = FirebaseAuth.instance.currentUser;
 
   Future<String> createGig(String gigName, String amount, String location, String fromtimePeriod,
@@ -84,6 +85,32 @@ class Database {
     }
 
   }
+
+
+  // checks the data base if the current user is an admin
+  // Future<bool> retrdata() async{
+  //   try{
+  //     await FirebaseFirestore.instance
+  //         .collection('GigUsers')
+  //         .doc(user!.uid)
+  //         .get()
+  //         .then((DocumentSnapshot documentSnapshot) {
+  //       if (documentSnapshot.exists) {
+  //         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+  //         return data['isAdmin'] == 1 ? true : false;
+  //
+  //       } else {
+  //         print('Document does not exist on the database');
+  //         return false;
+  //       }
+  //     });
+  //   }
+  //   catch(e){
+  //     print(e.toString());
+  //   }
+  //
+  //
+  // }
 
 
 

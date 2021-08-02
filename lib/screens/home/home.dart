@@ -7,6 +7,7 @@ import 'package:gig_worker/screens/authenticate/sign_in.dart';
 import 'package:gig_worker/palette/palette.dart';
 import 'package:gig_worker/models/gigs.dart';
 import 'package:gig_worker/screens/detailedPage.dart';
+import 'package:gig_worker/screens/response.dart';
 import 'package:gig_worker/services/database.dart';
 import 'package:gig_worker/screens/tools/new_gig_page.dart';
 
@@ -69,10 +70,7 @@ class _HompageState extends State<Hompage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text('Available jobs',
-        style: TextStyle(
-            color: Color(0xFF3B5999),
-        ),),
+        title:titleSelector(),
         actions: <Widget>[
           FlatButton.icon(
             icon: Icon(Icons.settings),
@@ -103,7 +101,7 @@ class _HompageState extends State<Hompage> {
           },
         )
       ),
-      body: streamWiget(context),
+      body: pageSelector(),
       bottomNavigationBar: buildbottombar(),
     );
   }
@@ -197,6 +195,8 @@ class _HompageState extends State<Hompage> {
     }).toList();
   }
 
+
+  //creating the bottom navy bar
   buildbottombar() {
     final inactivecolor= Colors.grey;
     return BottomNavyBar(
@@ -234,23 +234,33 @@ class _HompageState extends State<Hompage> {
   }
 
 
-  String retrdata() {
 
-    FirebaseFirestore.instance
-        .collection('GigUsers')
-        .doc(user!.uid)
-        .get()
-        .then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-       String _admin = data['isAdmin'];
-       print(_admin);
-      } else {
-        print('Document does not exist on the database');
-      }
-    });
-    return "";
+
+  //for routing pages when click the bottom navy bar
+  Widget pageSelector(){
+    switch(index){
+      case 1:
+        return responsePage();
+      default:
+        return streamWiget(context);
+    }
   }
+
+  //for changing the app bar title
+Widget titleSelector(){
+  switch(index){
+    case 1:
+      return Text("Active Gig",
+        style: TextStyle(
+          color: Color(0xFF3B5999),
+        ),);
+    default:
+      return  Text('Available jobs',
+        style: TextStyle(
+          color: Color(0xFF3B5999),
+        ),);
+  }
+}
 
 
 }
