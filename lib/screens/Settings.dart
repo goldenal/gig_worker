@@ -239,19 +239,27 @@ class _Settings_pageState extends State<Settings_page> {
       String title, Color backgroundColor, BuildContext context) {
     return TextButton(
       onPressed: (){
-
+          setState(() {
+            _isloading = true;
+          });
         if(_formKey.currentState!.validate()){
           Database().updateCurrentUser(firstNameController.text.trim(), emailController.text.trim(),
               lastNameController.text.trim(), sexController.text.trim(), phoneController.text.trim(),
               0, 0).
           then((value) {
                 if(value == 'success'){
+                  setState(() {
+                    _isloading = false;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('updated'),
                     backgroundColor: Colors.green.shade400,)
                   );
                 }
                 else{
+                  setState(() {
+                    _isloading = false;
+                  });
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Error'),
                     backgroundColor: Colors.red.shade400,)

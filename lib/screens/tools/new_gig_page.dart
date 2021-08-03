@@ -48,11 +48,25 @@ class _new_GigState extends State<new_Gig> {
   Widget build(BuildContext context) {
     return _loading == false ? Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
+       // backgroundColor: Color(0xff555555),
         backgroundColor: Colors.white,
         title: Text('Create new Gigs',
         style: TextStyle(
           color: Color(0xFF3B5999)
         ),),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Color(0xFF3B5999),
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Home()),
+            );
+          },
+        ),
 
       ),
       body: Form(
