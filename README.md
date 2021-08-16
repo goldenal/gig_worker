@@ -1,6 +1,11 @@
 # gig_worker
 
 A new Flutter project.
+<img src= "screenshots/Screenshot1.jpg" height = "300" >
+<img src= "screenshots/Screenshot2.jpg" height = "300" >
+<img src= "screenshots/Screenshot3.jpg" height = "300" >
+<img src= "screenshots/Screenshot4.jpg" height = "300" >
+<img src= "screenshots/Screenshot5.jpg" height = "300" >
 
 ## Getting Started
 
